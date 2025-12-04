@@ -10,17 +10,6 @@ const App: React.FC = () => {
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleSelectKey = async () => {
-    if (window.aistudio) {
-      try {
-        await window.aistudio.openSelectKey();
-        setErrorMessage('');
-      } catch (e) {
-        console.error("Key selection failed", e);
-      }
-    }
-  };
-
   // Helper to determine aspect ratio
   const getAspectRatio = (file: File): Promise<string> => {
     return new Promise((resolve) => {
@@ -92,17 +81,7 @@ const App: React.FC = () => {
       console.error(error);
       setAppState(AppState.ERROR);
       
-      // Handle permission/key errors specifically
-      if (error.status === 403 || 
-          (error.message && (
-            error.message.includes("Permission denied") || 
-            error.message.includes("Requested entity was not found") ||
-            error.message.includes("403")
-          ))) {
-        setErrorMessage("Permission denied. You may need to select a valid API Key.");
-      } else {
-        setErrorMessage(error.message || "Something went wrong during transformation.");
-      }
+      setErrorMessage(error.message || "Something went wrong during transformation.");
     }
   };
 
@@ -204,14 +183,12 @@ const App: React.FC = () => {
             {/* Error Message */}
             {appState === AppState.ERROR && (
               <div className="bg-red-500/10 border border-red-500/50 text-red-200 p-4 rounded-lg text-center">
-                {errorMessage}
-                {errorMessage.includes("Permission") && (
-                   <button 
-                     onClick={handleSelectKey}
-                     className="block mx-auto mt-2 text-sm text-pink-400 underline hover:text-pink-300"
-                   >
-                     Change API Key
-                   </button>
+                <p className="font-semibold">Error</p>
+                <p>{errorMessage}</p>
+                {errorMessage.includes("API Key") && (
+                   <div className="mt-2 text-sm text-slate-400">
+                     Check your Vercel Project Settings {'>'} Environment Variables.
+                   </div>
                 )}
               </div>
             )}

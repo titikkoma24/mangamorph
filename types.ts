@@ -9,13 +9,6 @@ export interface TransformationConfig {
   styleStrength: 'subtle' | 'balanced' | 'intense';
 }
 
-declare global {
-  interface AIStudio {
-    hasSelectedApiKey: () => Promise<boolean>;
-    openSelectKey: () => Promise<void>;
-  }
-}
-
 export const MANGA_PROMPT = `Transform this realistic image into a high-quality Japanese Manga/Anime style illustration.
 
 STRICT VISUAL REQUIREMENTS:

@@ -27,8 +27,14 @@ export const transformImageToManga = async (
   mimeType: string,
   aspectRatio: string = "1:1"
 ): Promise<string> => {
-  // Initialize the client strictly before the call to ensure usage of the latest selected key
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const apiKey = process.env.API_KEY;
+
+  if (!apiKey) {
+    throw new Error("API Key is missing. Please set the API_KEY environment variable in your Vercel settings and redeploy.");
+  }
+
+  // Initialize the client
+  const ai = new GoogleGenAI({ apiKey });
   const model = 'gemini-2.5-flash-image';
 
   try {
